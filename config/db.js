@@ -1,19 +1,8 @@
-const MongoClient = require('mongodb').MongoClient;
-const uri = "mongodb+srv://mongo-user:tX5d7LwDGHkjHzRh@cluster0.o5hd7.mongodb.net/crud_proj?retryWrites=true&w=majority";
-const client = new MongoClient(uri, { useNewUrlParser: true });
-
-
-// module.exports = client.connect(err => {
-//   const collection = client.db("test").collection("devices");
-//   console.log("Connected to MongoDB");
-//   client.close();
-// });
-
 const mongoose = require('mongoose');
 
 const connectDB = async () => {
 	try {
-		await mongoose.connect(uri, {
+		await mongoose.connect(process.env.DB_URI, {
 			useNewUrlParser: true,
 			useCreateIndex: true,
 			useFindAndModify: false,

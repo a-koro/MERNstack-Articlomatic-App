@@ -2,7 +2,9 @@ const express = require('express');
 const app = express();
 const connectDB = require('./config/db');
 require('dotenv').config();
-const Articles = require('./models/article');
+const Article = require('./models/article');
+const author = require('./models/author');
+const Category = require('./models/category');
 
 console.log(process.env.NODE_ENV);
 
@@ -10,7 +12,33 @@ app.use('/api', require('./routes/api/articles'));
 
 connectDB();
 
-const newspaper = new Articles({id: 1, title: "first article", content: "blablabla"});
+// const newCategory = new Category({name: "News"});
+// newCategory.save((err) => {
+//     if(err) {
+//         console.log(err);
+//     }
+//     else {
+//         console.log("Added Category");
+//     }
+// });
+
+// const newAuthor = new author({firstName: "Alexandros", lastName: "Korovesis"});
+// newAuthor.save((err) => {
+//     if(err) {
+//         console.log(err);
+//     }
+//     else {
+//         console.log("Added Category");
+//     }
+// });
+
+// const newspaper = new Article({
+//     title: "second article", 
+//     content: "some text",
+//     category: newCategory,
+//     author: newAuthor
+// });
+
 // newspaper.save((err) => {
 //     if(err) {
 //         console.log(err);
@@ -24,8 +52,8 @@ const newspaper = new Articles({id: 1, title: "first article", content: "blablab
 //     console.log(articles);
 // })
 
-Articles.find({title: "Daily Mail"}, (err, articles) => {
-    console.log("ID: " + articles[0]._id);
-});
+Article.find((err, articles) => {
+    console.log(articles);
+}).populate(["category", "author"]);
 
 app.listen(4000, () => console.log('server running on 4000'));
