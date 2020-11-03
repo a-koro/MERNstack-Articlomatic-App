@@ -6,13 +6,15 @@ const Article = require('./models/article');
 const author = require('./models/author');
 const Category = require('./models/category');
 
-console.log(process.env.NODE_ENV);
-
 app.use('/api', require('./routes/api/articles'));
+app.use('/api', require('./routes/api/categories'));
+
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 
 connectDB();
 
-// const newCategory = new Category({name: "News"});
+// const newCategory = new Category({name: "Clinical case study"});
 // newCategory.save((err) => {
 //     if(err) {
 //         console.log(err);
@@ -52,8 +54,8 @@ connectDB();
 //     console.log(articles);
 // })
 
-Article.find((err, articles) => {
-    console.log(articles);
-}).populate(["category", "author"]);
+// Article.find((err, articles) => {
+//     console.log(articles);
+// }).populate(["category", "author"]);
 
-app.listen(4000, () => console.log('server running on 4000'));
+app.listen(process.env.PORT, () => console.log('server running on ' + process.env.PORT));
