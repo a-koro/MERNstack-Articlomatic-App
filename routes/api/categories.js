@@ -14,4 +14,31 @@ router.get(
     }
 );
 
+router.post(
+    '/addCategory', async (req,res) => {
+
+        Category.exists({name: req.headers.name} , (err, doc) => {
+            if (err){ 
+                console.log(err) 
+            }else{ 
+                if(!doc) {
+                    let category = new Category({
+                        name: req.headers.name
+                    });
+
+                    category.save((err) => {
+                        if(err) {
+                            console.log(err);
+                        }
+                    });
+                    res.json({categ:category, exists: doc});
+                }
+                else {
+                    res.json({exists: doc});
+                }
+            } 
+        });
+    }
+);
+
 module.exports = router;
