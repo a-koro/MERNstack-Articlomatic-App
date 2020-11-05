@@ -73,4 +73,27 @@ router.get(
         res.json(articles);
     });
 
+router.get(
+    '/searchArticlesByTitle', async (req,res) => {
+        let articles = await Article.find({title: new RegExp(req.headers.title, "i")}, 'title', (err, results) => {
+            if(err) {
+                console.log(err);
+            }
+        });
+        res.json(articles);
+    }  
+);
+
+router.get(
+    '/getSpecificArticle', async (req, res) => {
+        let article = await Article.find({_id: req.headers.id}, (err, results) => {
+            if(err) {
+                console.log(err);
+            }
+        }).populate(["category"]);
+
+        res.json(article);
+    }
+);
+
 module.exports = router;

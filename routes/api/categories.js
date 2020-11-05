@@ -2,6 +2,7 @@ const express = require('express');
 const { model } = require('mongoose');
 const router = express.Router();
 const Category = require("../../models/category");
+const Article = require('../../models/article');
 
 router.get(
     '/getCategories', async (req,res) => {
@@ -38,6 +39,22 @@ router.post(
                 }
             } 
         });
+    }
+);
+
+router.delete(
+    '/deleteCategory', async (req,res) => {
+        let articles = await Article.find({category: req.headers.id}, (err, results) => {
+            if(err) {
+                console.log(err);
+            } 
+        });
+        if(articles.length === 0) {
+            let category = await Category.findByIdAndDelete({_id: req.headers.id});
+            res.json({safeToDelete: true, category: category});
+        } else {
+            res.json({safeToDelete: false});
+        }
     }
 );
 
