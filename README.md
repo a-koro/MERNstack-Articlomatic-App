@@ -2,8 +2,6 @@
 
 Articlomatic is an archive platform for articles.
 
-Utilized: MERN Stack, Mongoose, Bootstrap.
-
 ## Getting Started
 
 Deploy the App locally:
@@ -23,4 +21,27 @@ npm install
 npm run dev
 ```
 
-To run both Node.Js and React simultaneously.
+* To run both Node.Js and React simultaneously.
+
+## Features
+
+Project's key features include:
+
+- Read/Add/Edit/Delete (CRUD) operations on Article model
+- Read/Add/Delete on Category model
+
+- Search Articles by title
+
+Upcoming features:
+
+- User model to allow each use to create their own Articles to share with other users from the platform
+- User authentication with JWT
+
+## Technology Stack
+
+* MERN Stack
+    * **MongoDB**
+    * **Express.Js**
+    * **React**
+    * **Node.Js**
+* Bootstrap
