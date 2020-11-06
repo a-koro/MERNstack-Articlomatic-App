@@ -25,7 +25,7 @@ npm run dev
 
 ## Features
 
-Project's key features include:
+Project's key features:
 
 - Read/Add/Edit/Delete (CRUD) operations on Article model
 - Read/Add/Delete on Category model
@@ -34,6 +34,7 @@ Project's key features include:
 
 Upcoming features:
 
+- Implement validations in mongoose model
 - User model to allow each use to create their own Articles to share with other users from the platform
 - User authentication with JWT
 
@@ -45,3 +46,14 @@ Upcoming features:
     * **React**
     * **Node.Js**
 * Bootstrap
+
+## MERN Stack thoughts
+
+* Pros
+    * **Easy to implement**
+    * **All done with VScode**
+    * **MongoDB database is flexible and scalable**
+    * **Strong community backing MERN stack**
+
+* Cons
+    * **Need of many different libraries**

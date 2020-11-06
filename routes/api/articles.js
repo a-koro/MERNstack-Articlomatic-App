@@ -65,7 +65,7 @@ router.delete(
 
 router.get(
     '/getFilteredArticles', async (req,res) => {
-        let articles = await Article.find({category: req.headers.category}, (err, results) => {
+        let articles = await Article.find({category: req.query.category}, (err, results) => {
             if(err) {
                 console.log(err);
             }
@@ -75,7 +75,7 @@ router.get(
 
 router.get(
     '/searchArticlesByTitle', async (req,res) => {
-        let articles = await Article.find({title: new RegExp(req.headers.title, "i")}, 'title', (err, results) => {
+        let articles = await Article.find({title: new RegExp(req.query.title, "i")}, 'title', (err, results) => {
             if(err) {
                 console.log(err);
             }
@@ -86,7 +86,7 @@ router.get(
 
 router.get(
     '/getSpecificArticle', async (req, res) => {
-        let article = await Article.find({_id: req.headers.id}, (err, results) => {
+        let article = await Article.find({_id: req.query.id}, (err, results) => {
             if(err) {
                 console.log(err);
             }
