@@ -46,6 +46,7 @@ Upcoming features:
     * **Express.Js**
     * **React**
     * **Node.Js**
+* Mongoose
 * Bootstrap
 
 ## MERN Stack thoughts
