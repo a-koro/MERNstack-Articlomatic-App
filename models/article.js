@@ -19,4 +19,4 @@ const articleSchema = new mongoose.Schema({
     authorLastName: String
 });
 
-module.exports = mongoose.model('article', articleSchema);
+module.exports = mongoose.model('Article', articleSchema);
