@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const Article = require('../../models/article');
 
+const bodyParser = require('body-parser');
+const jsonParser = bodyParser.json()
+
 router.get(
     '/getArticles', async (req, res) => {
         let articles = await Article.find((err, results) => {
@@ -15,14 +18,14 @@ router.get(
 );
 
 router.post(
-    '/addArticle', async (req,res) => {
+    '/addArticle', jsonParser, async (req,res) => {
 
         let article = new Article({
-            title: req.headers.title, 
-            content: req.headers.content, 
-            category: req.headers.category,
-            authorFirstName: req.headers.firstname,
-            authorLastName: req.headers.lastname
+            title: req.body.title, 
+            content: req.body.content, 
+            category: req.body.category,
+            authorFirstName: req.body.firstname,
+            authorLastName: req.body.lastname
         });
 
         article.save((err) => {
@@ -35,9 +38,9 @@ router.post(
 });
 
 router.post(
-    '/editArticle', async (req,res) => {
+    '/editArticle', jsonParser, async (req,res) => {
 
-    let article = await Article.findById(req.headers.id, (err) => {
+    let article = await Article.findById(req.body.id, (err) => {
         if(err) {
             console.log(err);
         }
@@ -48,8 +51,8 @@ router.post(
 });
 
 router.post(
-    '/updateArticle', async (req,res) => {
-        let article = await Article.findByIdAndUpdate({_id: req.headers.id}, {content: req.headers.content}, {
+    '/updateArticle', jsonParser, async (req,res) => {
+        let article = await Article.findByIdAndUpdate({_id: req.body.id}, {content: req.body.content}, {
             returnOriginal: false
         });
         res.json(article);
@@ -93,6 +96,14 @@ router.get(
         }).populate(["category"]);
 
         res.json(article);
+    }
+);
+
+router.post(
+    '/test', jsonParser, async (req, res) => {
+        console.log(req.body);
+
+        res.json({article:"ferfer"});
     }
 );
 

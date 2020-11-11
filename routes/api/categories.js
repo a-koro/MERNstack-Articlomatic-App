@@ -4,6 +4,9 @@ const router = express.Router();
 const Category = require("../../models/category");
 const Article = require('../../models/article');
 
+const bodyParser = require('body-parser');
+const jsonParser = bodyParser.json()
+
 router.get(
     '/getCategories', async (req,res) => {
         let categories = await Category.find((err, results) => {
@@ -16,15 +19,15 @@ router.get(
 );
 
 router.post(
-    '/addCategory', async (req,res) => {
+    '/addCategory', jsonParser, async (req,res) => {
 
-        Category.exists({name: req.headers.name} , (err, doc) => {
+        Category.exists({name: req.body.name} , (err, doc) => {
             if (err){ 
                 console.log(err) 
             }else{ 
                 if(!doc) {
                     let category = new Category({
-                        name: req.headers.name
+                        name: req.body.name
                     });
 
                     category.save((err) => {

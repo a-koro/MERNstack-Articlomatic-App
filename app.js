@@ -9,8 +9,8 @@ const Category = require('./models/category');
 app.use('/api', require('./routes/api/articles'));
 app.use('/api', require('./routes/api/categories'));
 
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+// app.use(express.json());
+// app.use(express.urlencoded({extended: true}));
 
 connectDB();
 
