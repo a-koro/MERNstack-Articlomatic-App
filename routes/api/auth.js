@@ -8,14 +8,14 @@ const auth = require('../../middleware/auth');
 router.post('/register', async (req,res) => {
     try {
         const {firstName, lastName, email, password, passwordCheck} = req.body;
-
+        
         if(!email || !password || !passwordCheck || !firstName || !lastName) {
             return res.status(400).json({msg: "Not all fields have been filled"});
         }
         if(password !== passwordCheck) {
             return res.status(400).json({msg: "Enter the password twice to verify"});
         }
-
+        
         const existingUser = await User.findOne({email: email});
         if(existingUser) {
             return res.status(400).json({msg: "An account with this email already exists"});
@@ -53,7 +53,7 @@ router.post('/login', async (req,res) => {
         if(!userIsValid) {
             return res.status(400).json({msg: "Invalid email or password"});
         }
-        const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, { expiresIn: '30000' });
+        const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, { expiresIn: '60000' });
         res.json({
             token: token,
             user: {
@@ -93,5 +93,15 @@ router.post("/tokenIsValid", async (req, res) => {
       res.status(500).json({ error: err.message });
     }
   });
+
+router.get("/getLoggedInUser", auth, async (req, res) => {
+    const user = await User.findById(req.user);
+    res.json({
+        id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email
+    });
+});
 
 module.exports = router;
