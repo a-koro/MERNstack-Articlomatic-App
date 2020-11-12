@@ -2,9 +2,6 @@ const express = require('express');
 const router = express.Router();
 const Article = require('../../models/article');
 
-const bodyParser = require('body-parser');
-const jsonParser = bodyParser.json()
-
 router.get(
     '/getArticles', async (req, res) => {
         let articles = await Article.find((err, results) => {
@@ -18,7 +15,7 @@ router.get(
 );
 
 router.post(
-    '/addArticle', jsonParser, async (req,res) => {
+    '/addArticle', async (req,res) => {
 
         let article = new Article({
             title: req.body.title, 
@@ -38,7 +35,7 @@ router.post(
 });
 
 router.post(
-    '/editArticle', jsonParser, async (req,res) => {
+    '/editArticle', async (req,res) => {
 
     let article = await Article.findById(req.body.id, (err) => {
         if(err) {
@@ -51,7 +48,7 @@ router.post(
 });
 
 router.post(
-    '/updateArticle', jsonParser, async (req,res) => {
+    '/updateArticle', async (req,res) => {
         let article = await Article.findByIdAndUpdate({_id: req.body.id}, {content: req.body.content}, {
             returnOriginal: false
         });
@@ -100,7 +97,7 @@ router.get(
 );
 
 router.post(
-    '/test', jsonParser, async (req, res) => {
+    '/test', async (req, res) => {
         console.log(req.body);
 
         res.json({article:"ferfer"});

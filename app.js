@@ -6,12 +6,12 @@ const Article = require('./models/article');
 const author = require('./models/author');
 const Category = require('./models/category');
 
+app.use(express.json());
+// app.use(express.urlencoded({extended: true}));
+
 app.use('/api', require('./routes/api/articles'));
 app.use('/api', require('./routes/api/categories'));
 app.use('/api', require('./routes/api/auth'));
-
-// app.use(express.json());
-// app.use(express.urlencoded({extended: true}));
 
 connectDB();
 
