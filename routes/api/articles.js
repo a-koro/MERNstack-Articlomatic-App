@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Article = require('../../models/article');
+const auth = require('../../middleware/auth');
 
 router.get(
     '/getArticles', async (req, res) => {
@@ -15,14 +16,30 @@ router.get(
 );
 
 router.post(
-    '/addArticle', async (req,res) => {
+    '/myArticles', auth, async (req,res) => {
+        try {
+            let articles = await Article
+                .find({user: req.user}, "title authorFirstName authorLastName category user")
+                .populate("user","firstName lastName")
+                .populate("category");
+
+            return res.json(articles);
+        } catch (err) {
+            return res.status(500).json({error: err.message});
+        }
+    }
+);
+
+router.post(
+    '/addArticle', auth, async (req,res) => {
 
         let article = new Article({
             title: req.body.title, 
             content: req.body.content, 
+            authorFirstName: req.body.firstName,
+            authorLastName: req.body.lastName,
             category: req.body.category,
-            authorFirstName: req.body.firstname,
-            authorLastName: req.body.lastname
+            user: req.user
         });
 
         article.save((err) => {
@@ -30,7 +47,7 @@ router.post(
                 console.log(err);
             }
         });
-
+        
         res.json(article);
 });
 
@@ -93,14 +110,6 @@ router.get(
         }).populate(["category"]);
 
         res.json(article);
-    }
-);
-
-router.post(
-    '/test', async (req, res) => {
-        console.log(req.body);
-
-        res.json({article:"ferfer"});
     }
 );
 
