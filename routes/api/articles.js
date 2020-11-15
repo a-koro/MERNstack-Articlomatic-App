@@ -9,7 +9,9 @@ router.get(
             if(err) {
                 console.log(err);
             }
-        }).populate(["category"]);
+        })
+        .populate("user","firstName lastName")
+        .populate(["category"]);
 
         res.json(articles);
     }
@@ -65,7 +67,11 @@ router.post(
 });
 
 router.post(
-    '/updateArticle', async (req,res) => {
+    '/updateArticle', auth, async (req,res) => {
+        let articleBeforeUpdate = await Article.findOne({_id: req.body.id});
+        if(!(req.user == articleBeforeUpdate.user)) {
+            return res.status(401).json({msg: "User unauthorized to modify this article"});
+        }
         let article = await Article.findByIdAndUpdate({_id: req.body.id}, {content: req.body.content}, {
             returnOriginal: false
         });
@@ -74,7 +80,11 @@ router.post(
 );
 
 router.delete(
-    '/deleteArticle', async (req,res) => {
+    '/deleteArticle', auth, async (req,res) => {
+        let articleBeforeUpdate = await Article.findOne({_id: req.headers.id});
+        if(!(req.user == articleBeforeUpdate.user)) {
+            return res.status(401).json({msg: "User unauthorized to modify this article"});
+        }
         let article = await Article.findByIdAndDelete({_id: req.headers.id});
         res.json(article);
     }
@@ -107,7 +117,9 @@ router.get(
             if(err) {
                 console.log(err);
             }
-        }).populate(["category"]);
+        })
+        .populate("user","firstName lastName")
+        .populate(["category"]);
 
         res.json(article);
     }
