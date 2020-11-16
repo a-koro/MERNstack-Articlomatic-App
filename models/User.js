@@ -18,6 +18,10 @@ const userSchema = new mongoose.Schema({
       type: String,
       required: true
    },
+   role: {
+      type: String,
+      required: true
+   },
    articles: [{
       type: mongoose.Types.ObjectId,
       ref: "Article"

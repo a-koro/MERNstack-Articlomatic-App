@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const Article = require('../../models/article');
 const auth = require('../../middleware/auth');
+const ROLE = require('../../config/roles');
+const {authAdmin, authUser} = require('../../middleware/authRole');
 
 router.get(
     '/getArticles', async (req, res) => {
@@ -92,13 +94,23 @@ router.delete(
 
 router.get(
     '/getFilteredArticles', async (req,res) => {
-        let articles = await Article.find({category: req.query.category}, (err, results) => {
+        let articles = await Article.find({category: req.query.category}, 'title', (err, results) => {
             if(err) {
                 console.log(err);
             }
-        }).populate(["category"]);
+        }).populate("user","firstName lastName").populate(["category"]);
         res.json(articles);
     });
+
+router.post(
+        '/getUsersFilteredArticles', auth, async (req,res) => {
+            let articles = await Article.find({category: req.query.category, user: req.user}, 'title', (err, results) => {
+                if(err) {
+                    console.log(err);
+                }
+            }).populate("user","firstName lastName").populate(["category"]);
+            res.json(articles);
+        });
 
 router.get(
     '/searchArticlesByTitle', async (req,res) => {

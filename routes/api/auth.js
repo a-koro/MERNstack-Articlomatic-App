@@ -4,6 +4,7 @@ const User = require('../../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const auth = require('../../middleware/auth');
+const ROLE = require('../../config/roles');
 
 router.post('/register', async (req,res) => {
     try {
@@ -28,7 +29,8 @@ router.post('/register', async (req,res) => {
             email: email,
             password: hashedPassword,
             firstName: firstName,
-            lastName: lastName
+            lastName: lastName,
+            role: ROLE.USER
         });
         const savedUser = await newUser.save();
         res.json(savedUser);
@@ -53,7 +55,7 @@ router.post('/login', async (req,res) => {
         if(!userIsValid) {
             return res.status(400).json({msg: "Invalid email or password"});
         }
-        const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, { expiresIn: process.env.SESSION_LIFESPAN });
+        const token = jwt.sign({id: user._id, role: user.role}, process.env.JWT_SECRET, { expiresIn: process.env.SESSION_LIFESPAN });
         res.json({
             token: token,
             user: {

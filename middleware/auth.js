@@ -13,6 +13,7 @@ const auth = (req,res,next) => {
             return res.status(401).json({msg: "Token not valid"});
         }
         req.user = verifiedToken.id;
+        req.role = verifiedToken.role;
         next();
     } catch(err) {
         return res.status(500).json({error: err.message});
