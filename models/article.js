@@ -10,14 +10,6 @@ const articleSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    authorFirstName:  {
-        type: String,
-        required: true
-    },
-    authorLastName:  {
-        type: String,
-        required: true
-    },
     category: {
         type: mongoose.Types.ObjectId,
         ref: "Category",

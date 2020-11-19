@@ -3,6 +3,8 @@ const { model } = require('mongoose');
 const router = express.Router();
 const Category = require("../../models/category");
 const Article = require('../../models/article');
+const auth = require('../../middleware/auth');
+const {authAdmin, authUser} = require('../../middleware/authRole');
 
 router.get(
     '/getCategories', async (req,res) => {
@@ -16,7 +18,7 @@ router.get(
 );
 
 router.post(
-    '/addCategory', async (req,res) => {
+    '/addCategory', auth, authAdmin, async (req,res) => {
 
         Category.exists({name: req.body.name} , (err, doc) => {
             if (err){ 
@@ -43,7 +45,7 @@ router.post(
 );
 
 router.delete(
-    '/deleteCategory', async (req,res) => {
+    '/deleteCategory', auth, authAdmin, async (req,res) => {
         let articles = await Article.find({category: req.headers.id}, (err, results) => {
             if(err) {
                 console.log(err);

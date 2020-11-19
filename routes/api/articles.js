@@ -20,7 +20,7 @@ router.get(
 );
 
 router.post(
-    '/myArticles', auth, async (req,res) => {
+    '/myArticles', auth, authUser, async (req,res) => {
         try {
             let articles = await Article
                 .find({user: req.user}, "title authorFirstName authorLastName category user")
@@ -35,13 +35,11 @@ router.post(
 );
 
 router.post(
-    '/addArticle', auth, async (req,res) => {
+    '/addArticle', auth, authUser, async (req,res) => {
 
         let article = new Article({
             title: req.body.title, 
-            content: req.body.content, 
-            authorFirstName: req.body.firstName,
-            authorLastName: req.body.lastName,
+            content: req.body.content,
             category: req.body.category,
             user: req.user
         });
