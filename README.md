@@ -36,8 +36,6 @@ Project's key features:
 Upcoming features:
 
 - Implement validations in mongoose model
-- User model to allow each use to create their own Articles to share with other users from the platform
-- User authentication with JWT
 
 ## Technology Stack
 
