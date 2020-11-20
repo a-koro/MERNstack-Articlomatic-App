@@ -69,24 +69,29 @@ router.post(
 router.post(
     '/updateArticle', auth, async (req,res) => {
         let articleBeforeUpdate = await Article.findOne({_id: req.body.id});
-        if(!(req.user == articleBeforeUpdate.user)) {
-            return res.status(401).json({msg: "User unauthorized to modify this article"});
+
+        if((req.user == articleBeforeUpdate.user) || (req.role === ROLE.ADMIN)) {
+            let article = await Article.findByIdAndUpdate({_id: req.body.id}, {content: req.body.content}, {
+                returnOriginal: false
+            });
+            res.json(article);
+        } else {
+            res.status(401).json({msg: "User unauthorized to modify this article"});
         }
-        let article = await Article.findByIdAndUpdate({_id: req.body.id}, {content: req.body.content}, {
-            returnOriginal: false
-        });
-        res.json(article);
+        
     }
 );
 
 router.delete(
     '/deleteArticle', auth, async (req,res) => {
         let articleBeforeUpdate = await Article.findOne({_id: req.headers.id});
-        if(!(req.user == articleBeforeUpdate.user)) {
-            return res.status(401).json({msg: "User unauthorized to modify this article"});
+            
+        if((req.user == articleBeforeUpdate.user) || (req.role === ROLE.ADMIN)) {
+            let article = await Article.findByIdAndDelete({_id: req.headers.id});
+            res.json(article);
+        } else {
+            res.status(401).json({msg: "User unauthorized to modify this article"});
         }
-        let article = await Article.findByIdAndDelete({_id: req.headers.id});
-        res.json(article);
     }
 );
 
