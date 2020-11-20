@@ -7,7 +7,7 @@ Articlomatic is an archive platform for articles.
 Deploy the App locally:
 
 * [Node Package Manager](https://www.npmjs.com/get-npm) - Download npm
-* Add in client directory the following repository https://github.com/a-koro/Crud-Project-FrontEnd.git
+* Add in client directory the following repository https://github.com/a-koro/MERNstack-Articlomatic-App-FrontEnd.git
 * Navigate to *~\CrudProj\client*
  and run the following command:
 
