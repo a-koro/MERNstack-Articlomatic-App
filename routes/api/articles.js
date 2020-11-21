@@ -12,6 +12,7 @@ router.get(
                 console.log(err);
             }
         })
+        .sort({createdAt: 'desc'})
         .populate("user","firstName lastName")
         .populate(["category"]);
 
@@ -24,6 +25,7 @@ router.post(
         try {
             let articles = await Article
                 .find({user: req.user}, "title authorFirstName authorLastName category user")
+                .sort({createdAt: 'desc'})
                 .populate("user","firstName lastName")
                 .populate("category");
 
