@@ -46,6 +46,7 @@ Upcoming features:
     * **Node.Js**
 * Mongoose
 * Bootstrap
+* JWT
 
 ## MERN Stack thoughts
 
