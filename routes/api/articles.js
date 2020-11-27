@@ -39,20 +39,24 @@ router.post(
 router.post(
     '/addArticle', auth, authUser, async (req,res) => {
 
-        let article = new Article({
-            title: req.body.title, 
-            content: req.body.content,
-            category: req.body.category,
-            user: req.user
-        });
-
-        article.save((err) => {
-            if(err) {
-                console.log(err);
-            }
-        });
-        
-        res.json(article);
+        try {
+            let article = new Article({
+                title: req.body.title, 
+                content: req.body.content,
+                category: req.body.category,
+                user: req.user
+            });
+    
+            let savedArticle = await article.save();
+            
+            res.json(savedArticle);
+        } catch(err) {
+            if(err.errors.title) return res.status(500).json({error: err.errors.title.message});
+            if(err.errors.content) return res.status(500).json({error: err.errors.content.message});
+            if(err.errors.category) return res.status(500).json({error: err.errors.category.message});
+            if(err.errors.user) return res.status(500).json({error: err.errors.user.message});
+            return res.status(500);
+        }
 });
 
 router.post(
