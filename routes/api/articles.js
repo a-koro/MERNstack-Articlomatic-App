@@ -1,9 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const Article = require('../../models/article');
+const ArticleImage = require('../../models/articleImage');
 const auth = require('../../middleware/auth');
 const ROLE = require('../../config/roles');
 const {authAdmin, authUser} = require('../../middleware/authRole');
+var multer  = require('multer');
+var upload = multer({storage: multer.memoryStorage()});
 
 router.get(
     '/getArticles', async (req, res) => {
@@ -94,6 +97,7 @@ router.delete(
             
         if((req.user == articleBeforeUpdate.user) || (req.role === ROLE.ADMIN)) {
             let article = await Article.findByIdAndDelete({_id: req.headers.id});
+            let articleImage = await ArticleImage.findOneAndDelete({article: req.headers.id});
             res.json(article);
         } else {
             res.status(401).json({msg: "User unauthorized to modify this article"});
@@ -143,6 +147,84 @@ router.get(
         .populate(["category"]);
 
         res.json(article);
+    }
+);
+
+// New Endpoint to test multipart/form
+router.post(
+    '/multipart', upload.single('image'), async (req, res) => {
+        console.log(req.file);
+
+        let articleImage = new ArticleImage({
+            name: req.file.originalname,
+            contentLength: req.file.size,
+            img: {
+                data: req.file.buffer,
+                contentType: req.file.mimetype
+            }
+        });
+
+        let savedImage = await articleImage.save();
+
+        res.writeHead(200, {
+            'Content-Type': savedImage.img.contentType,
+            'Content-disposition': 'attachment;filename=' + savedImage.name,
+            'Content-Length': savedImage.contentLength
+        });
+        res.end(Buffer.from(savedImage.img.data, 'binary'));
+    }
+);
+
+// New Endpoint to add Article with image
+router.post(
+    '/addArticleWithImage', upload.single('image'), auth, authUser, async (req, res) => {
+        try {
+
+            let articleImage = new ArticleImage({
+                name: req.file.originalname,
+                contentLength: req.file.size,
+                img: {
+                    data: req.file.buffer,
+                    contentType: req.file.mimetype
+                }
+            });
+            let savedArticleImage = await articleImage.save();
+
+            let article = new Article({
+                title: req.body.title, 
+                content: req.body.content,
+                category: req.body.category,
+                user: req.user,
+                image: savedArticleImage
+            });
+    
+            let savedArticle = await article.save();
+            let updatedArticleImage = await ArticleImage.findOneAndUpdate({_id: savedArticleImage._id}, {article: savedArticle._id}, {
+                returnOriginal: false
+            });
+    
+            res.writeHead(200, {
+                'Content-Type': savedArticle.image.img.contentType,
+                'Content-disposition': 'attachment;filename=' + savedArticle.image.name,
+                'Content-Length': savedArticle.image.contentLength
+            });
+            res.end(Buffer.from(savedArticle.image.img.data, 'binary'));
+        } catch(err) {
+            res.status(500).json(err);
+        }
+    }
+);
+
+router.get(
+    '/articleImage', async (req,res) => {
+        let articleImage = await ArticleImage.findOne({article: req.query.articleId});
+
+        res.writeHead(200, {
+            'Content-Type': articleImage.img.contentType,
+            'Content-disposition': 'attachment;filename=' + articleImage.name,
+            'Content-Length': articleImage.contentLength
+        });
+        res.end(Buffer.from(articleImage.img.data, 'binary'));
     }
 );
 
