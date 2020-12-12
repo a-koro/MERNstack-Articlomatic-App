@@ -22,6 +22,10 @@ const articleSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: "User",
         required: [true, 'User is required']
+    },
+    image: {
+        type: mongoose.Types.ObjectId,
+        ref: "ArticleImage"
     }
 }, {
     timestamps: true
