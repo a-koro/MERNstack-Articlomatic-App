@@ -203,13 +203,14 @@ router.post(
                 returnOriginal: false
             });
     
-            res.writeHead(200, {
-                'Content-Type': savedArticle.image.img.contentType,
-                'Content-disposition': 'attachment;filename=' + savedArticle.image.name,
-                'Content-Length': savedArticle.image.contentLength
-            });
-            res.end(Buffer.from(savedArticle.image.img.data, 'binary'));
+            res.status(200).end();
         } catch(err) {
+            if(err.errors.title) return res.status(500).json({error: err.errors.title.message});
+            if(err.errors.content) return res.status(500).json({error: err.errors.content.message});
+            if(err.errors.category) return res.status(500).json({error: err.errors.category.message});
+            if(err.errors.user) return res.status(500).json({error: err.errors.user.message});
+            if(err.errors.contentLength) return res.status(500).json({error: err.errors.contentLength.message});
+            if(err.errors.name) return res.status(500).json({error: err.errors.name.message});
             res.status(500).json(err);
         }
     }

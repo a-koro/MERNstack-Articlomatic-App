@@ -1,11 +1,21 @@
 const mongoose = require('mongoose');
 
 const articleImageSchema = new mongoose.Schema({
-    name: String,
-    contentLength: Number,
+    name: {
+        type: String,
+        maxlength: [200, "Image name longer than 200 characters"]
+    },
+    contentLength: {
+        type: Number,
+        max: [1000000, "Image larger than 1MB"]
+    },
     img: { 
         data: Buffer, 
-        contentType: String 
+        contentType: {
+            type: String,
+            enum: ['image/jpeg', 'image/png'],
+            required: true
+        }
     },
     article: {
         type: mongoose.Types.ObjectId,
