@@ -16,6 +16,23 @@ router.get(
             }
         })
         .sort({createdAt: 'desc'})
+        .limit(16)
+        .populate("user","firstName lastName")
+        .populate(["category"]);
+
+        res.json(articles);
+    }
+);
+
+router.get(
+    '/getTrendingArticles', async (req, res) => {
+        let articles = await Article.find((err, results) => {
+            if(err) {
+                console.log(err);
+            }
+        })
+        .sort({views: 'desc'})
+        .limit(5)
         .populate("user","firstName lastName")
         .populate(["category"]);
 
@@ -111,7 +128,9 @@ router.get(
             if(err) {
                 console.log(err);
             }
-        }).populate("user","firstName lastName").populate(["category"]);
+        })
+        .sort({createdAt: 'desc'})
+        .populate("user","firstName lastName").populate(["category"]);
         res.json(articles);
     });
 
@@ -138,6 +157,7 @@ router.get(
 
 router.get(
     '/getSpecificArticle', async (req, res) => {
+        await Article.findOneAndUpdate({_id: req.query.id}, { $inc: { views: 1 }});
         let article = await Article.find({_id: req.query.id}, (err, results) => {
             if(err) {
                 console.log(err);
