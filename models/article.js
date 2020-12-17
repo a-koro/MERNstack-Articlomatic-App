@@ -26,6 +26,10 @@ const articleSchema = new mongoose.Schema({
     image: {
         type: mongoose.Types.ObjectId,
         ref: "ArticleImage"
+    },
+    views: {
+        type: Number,
+        default: 0
     }
 }, {
     timestamps: true
