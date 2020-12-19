@@ -124,7 +124,7 @@ router.delete(
 
 router.get(
     '/getFilteredArticles', async (req,res) => {
-        let articles = await Article.find({category: req.query.category}, 'title', (err, results) => {
+        let articles = await Article.find({category: req.query.category}, ['title', 'createdAt', 'content'], (err, results) => {
             if(err) {
                 console.log(err);
             }
